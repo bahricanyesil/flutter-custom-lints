@@ -21,7 +21,7 @@ void demonstrateAsTypeAssertion() {
   const Object data = 'Hello World';
 
   // ❌ This will trigger no_as_type_assertion lint
-  const String str = data as String;
+  // const String str = data as String;
 
   // ✅ Better approach
   const String safeStr = data is String ? data : ''; // Safe type promotion
@@ -33,15 +33,12 @@ void demonstrateDirectIterableAccess() {
   final List<String> emptyList = <String>[];
 
   // ❌ This will trigger no_direct_iterable_access lint for empty lists
+  // ignore: no_direct_iterable_access
   final String first = emptyList.first; // Would throw at runtime
 
   // ✅ Better approaches
-  final String? safeFirst = items.isNotEmpty ? items.first : null;
+  final String? safeFirst = items.isNotEmpty ? items.safeFirst : null;
   print('Safe first item: $safeFirst');
-
-  // Alternative safe access
-  final String? firstOrNull = emptyList.isEmpty ? null : emptyList.first;
-  print('First or null: $firstOrNull');
 }
 
 void demonstrateNullForce() {
@@ -49,7 +46,7 @@ void demonstrateNullForce() {
   String? actuallyNull;
 
   // ❌ This will trigger no_null_force lint
-  final String forced = actuallyNull!; // Would throw at runtime
+  // final String forced = actuallyNull!; // Would throw at runtime
 
   // ✅ Better approach
   const String safe = nullableString; // Null-promoted
@@ -61,9 +58,9 @@ void demonstrateStringComparison() {
   const String str2 = 'HELLO';
 
   // ❌ This will trigger use_compare_without_case lint
-  if (str1 == str2) {
-    print('Strings match (case insensitive)');
-  }
+  // if (str1 == str2) {
+  //   print('Strings match (case insensitive)');
+  // }
 
   // ✅ Better approach would be to use compareWithoutCase extension
   // For now, using standard comparison
@@ -74,6 +71,15 @@ void demonstrateStringComparison() {
 
 extension on String {
   bool compareWithoutCase(String other) {
+    // ignore: use_compare_without_case
     return toLowerCase() == other.toLowerCase();
+  }
+}
+
+// ignore: prefer-match-file-name
+extension IterableUtilExtensions<T> on Iterable<T> {
+  T? get safeFirst {
+    if (isEmpty) return null;
+    return first;
   }
 }

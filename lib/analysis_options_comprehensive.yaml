@@ -193,7 +193,7 @@ linter:
 
 analyzer:
   plugins:
-    - flutter_custom_lints
+    - custom_lint
 
   exclude:
     - build/**
@@ -208,6 +208,13 @@ analyzer:
     - "**/*.mapper.dart"
     - "**/firebase_options*.dart"
     - "**/*.config.dart"
+    - lib/generated/**
+    - "android/**"
+    - "ios/**"
+    - "web/**"
+    - "windows/**"
+    - "macos/**"
+    - "linux/**"
 
   language:
     strict-casts: true
@@ -256,6 +263,7 @@ dart_code_metrics:
     max-lines: 1000
 
 custom_lint:
+  enable_all_lint_rules: true
   rules:
     # Custom lint rules - prevent unsafe type operations
     - no_as_type_assertion: error      # Prevent unsafe 'as' casting

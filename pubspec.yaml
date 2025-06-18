@@ -17,3 +17,4 @@ dependencies:
 
 dev_dependencies:
   test: ^1.26.2
+  custom_lint: ^0.7.5

@@ -23,7 +23,7 @@ void main() {
           'no_as_type_assertion': 0,
         },
         'should_fail_direct_iterable_access.dart': <String, int>{
-          'no_direct_iterable_access': 4,
+          'no_direct_iterable_access': 6,
         },
         'should_pass_direct_iterable_access.dart': <String, int>{
           'no_direct_iterable_access': 0,

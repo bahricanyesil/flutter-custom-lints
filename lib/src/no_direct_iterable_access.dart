@@ -65,5 +65,25 @@ class NoDirectIterableAccess extends DartLintRule {
         );
       }
     });
+
+    // Check for prefixed identifier access (iterable.first, iterable.last)
+    context.registry.addPrefixedIdentifier((PrefixedIdentifier node) {
+      if (node.identifier.name != 'first' && node.identifier.name != 'last') {
+        return;
+      }
+
+      final DartType? targetType = node.prefix.staticType;
+      if (_isIterableType(targetType)) {
+        reporter.reportError(
+          AnalysisError.forValues(
+            source: reporter.source,
+            offset: node.offset,
+            length: node.length,
+            errorCode: _code,
+            message: _code.problemMessage,
+          ),
+        );
+      }
+    });
   }
 }
