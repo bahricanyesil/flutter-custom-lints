@@ -16,8 +16,6 @@ import 'src/no_direct_iterable_access.dart';
 import 'src/no_null_force.dart';
 import 'src/use_compare_without_case.dart';
 
-export 'analysis_options_comprehensive.yaml';
-
 PluginBase createPlugin() => _FlutterCustomLintsPlugin();
 
 // ignore: prefer-match-file-name
