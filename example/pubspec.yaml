@@ -6,6 +6,6 @@ environment:
   sdk: ^3.8.1
 
 dev_dependencies:
-  custom_lint: ^
+  custom_lint: ^0.7.5
   flutter_custom_lints:
     path: ../

@@ -38,6 +38,49 @@ custom_lint:
     - use_compare_without_case
 ```
 
+## Comprehensive Analysis Options
+
+This package provides a comprehensive analysis options configuration with enterprise-grade linting rules that you can use in your Flutter projects:
+
+```yaml
+include: package:flutter_custom_lints/analysis_options_comprehensive.yaml
+```
+
+This comprehensive configuration includes:
+
+- **180+ linter rules** covering all aspects of Flutter and Dart development
+- **Flutter Lints** as the base configuration
+- **Dart Code Metrics** with complexity analysis and code quality metrics
+- **Strict type safety** and null safety enforcement
+- **Performance optimizations** and best practices
+- **Advanced code style** enforcement
+- **Custom lint rules** from this package automatically enabled
+
+### Usage
+
+In your project's `analysis_options.yaml`, simply include:
+
+```yaml
+include: package:flutter_custom_lints/analysis_options_comprehensive.yaml
+
+# You can still override specific rules if needed:
+linter:
+  rules:
+    # Disable a specific rule if it's too strict for your project
+    avoid_print: false
+
+    # Add additional rules
+    - custom_rule_name
+
+# Add project-specific analyzer configurations
+analyzer:
+  exclude:
+    - lib/generated/**
+    - lib/specific_folder/**
+```
+
+**Note:** This preset already includes the `custom_lint` plugin configuration and enables all custom lint rules from this package automatically.
+
 ## Available Lints
 
 ### `no_as_type_assertion`

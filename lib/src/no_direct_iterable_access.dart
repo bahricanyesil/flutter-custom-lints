@@ -12,7 +12,7 @@ class NoDirectIterableAccess extends DartLintRule {
   static const LintCode _code = LintCode(
     name: 'no_direct_iterable_access',
     problemMessage:
-        'Direct access on Iterable is not safe. Create an extension method named safeAt() and use it instead.',
+        '''Direct access on Iterable is not safe. Create an extension method named safeAt() and use it instead.''',
     errorSeverity: ErrorSeverity.ERROR,
   );
 

@@ -1,4 +1,7 @@
-// ignore_for_file: unused_local_variable, unused_element
+// ignore_for_file: unused_local_variable, unused_element,
+// ignore_for_file: prefer-match-file-name
+
+import 'extensions/iterable_util_extensions.dart';
 
 void main() {
   final List<int> list = <int>[1, 2, 3];
@@ -18,21 +21,4 @@ void main() {
   // Using safeFirst and safeLast instead of direct access
   final int? firstGreaterThanOne = iterable.safeFirst;
   final int? lastGreaterThanOne = iterable.safeLast;
-}
-
-extension IterableUtilExtensions<T> on Iterable<T> {
-  T? safeAt(int index) {
-    if (index < 0 || index >= length) return null;
-    return elementAt(index);
-  }
-
-  T? get safeFirst {
-    if (isEmpty) return null;
-    return first;
-  }
-
-  T? get safeLast {
-    if (isEmpty) return null;
-    return last;
-  }
 }

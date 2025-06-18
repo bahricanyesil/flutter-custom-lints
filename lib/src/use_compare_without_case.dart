@@ -11,7 +11,7 @@ class UseCompareWithoutCase extends DartLintRule {
   static const LintCode _code = LintCode(
     name: 'use_compare_without_case',
     problemMessage:
-        'Create an extension method named compareWithoutCase() and use it instead of == for string comparisons.',
+        '''Create an extension method named compareWithoutCase() and use it instead of == for string comparisons.''',
     errorSeverity: ErrorSeverity.WARNING,
   );
 

@@ -1,5 +1,7 @@
 // ignore_for_file: prefer-match-file-name, unused_local_variable
 
+import 'extensions/string_util_extensions.dart';
+
 void main() {
   // Using compareWithoutCase
   const String a = 'x21';
@@ -37,11 +39,5 @@ void main() {
 class StringComparer {
   bool compare(String a, String b) {
     return a.compareWithoutCase(b);
-  }
-}
-
-extension StringUtilExtensions on String {
-  bool compareWithoutCase(String other) {
-    return toLowerCase() == other.toLowerCase();
   }
 }
