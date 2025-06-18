@@ -1,0 +1,144 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "FVM: Pub Get",
+      "type": "shell",
+      "command": "fvm",
+      "args": [
+        "dart",
+        "pub",
+        "get"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "FVM: Run Tests",
+      "type": "shell",
+      "command": "fvm",
+      "args": [
+        "dart",
+        "test"
+      ],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "FVM: Run Tests (Verbose)",
+      "type": "shell",
+      "command": "fvm",
+      "args": [
+        "dart",
+        "test",
+        "-v"
+      ],
+      "group": "test",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "FVM: Run Build Runner",
+      "type": "shell",
+      "command": "fvm",
+      "args": [
+        "dart",
+        "run",
+        "build_runner",
+        "build"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "FVM: Clean Build Runner",
+      "type": "shell",
+      "command": "fvm",
+      "args": [
+        "dart",
+        "run",
+        "build_runner",
+        "clean"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "FVM: Analyze",
+      "type": "shell",
+      "command": "fvm",
+      "args": [
+        "dart",
+        "analyze"
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+    },
+    {
+      "label": "FVM: Format",
+      "type": "shell",
+      "command": "fvm",
+      "args": [
+        "dart",
+        "format",
+        "."
+      ],
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared",
+        "showReuseMessage": true,
+        "clear": false
+      },
+      "problemMatcher": []
+    }
+  ]
+}

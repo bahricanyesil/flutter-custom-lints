@@ -1,0 +1,14 @@
+{
+  "dart.flutterSdkPath": ".fvm/versions/stable",
+  "dart.sdkPath": ".fvm/versions/stable/bin/cache/dart-sdk",
+  "dart.runPubGetOnPubspecChanges": false,
+  "dart.automaticCommentSlashes": "tripleSlash",
+  "dart.lineLength": 80,
+  "files.associations": {
+    "*.dart": "dart"
+  },
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "explicit"
+  }
+}

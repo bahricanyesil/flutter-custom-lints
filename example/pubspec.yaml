@@ -1,0 +1,11 @@
+name: flutter_custom_lints_example
+description: Example project demonstrating flutter_custom_lints usage
+publish_to: none
+
+environment:
+  sdk: ^3.8.1
+
+dev_dependencies:
+  custom_lint: ^
+  flutter_custom_lints:
+    path: ../

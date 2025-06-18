@@ -1,0 +1,10 @@
+analyzer:
+  plugins:
+    - custom_lint
+
+custom_lint:
+  rules:
+    - no_as_type_assertion
+    - no_direct_iterable_access
+    - no_null_force
+    - use_compare_without_case
