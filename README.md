@@ -10,8 +10,8 @@ Add `flutter_custom_lints` to your `dev_dependencies` in `pubspec.yaml`:
 
 ```yaml
 dev_dependencies:
-  custom_lint: ^0.7.5
-  flutter_custom_lints: ^1.0.0
+  custom_lint:
+  flutter_custom_lints:
 ```
 
 Then run:
@@ -189,55 +189,3 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## Development Setup
-
-This project uses [FVM (Flutter Version Management)](https://fvm.app/) to ensure consistent Flutter SDK versions across different development environments.
-
-### Prerequisites
-
-1. Install FVM globally:
-
-   ```bash
-   dart pub global activate fvm
-   ```
-
-2. Install the project's Flutter version:
-
-   ```bash
-   fvm install
-   ```
-
-### Development Commands
-
-You can use FVM commands directly:
-
-```bash
-# Install dependencies
-fvm dart pub get
-
-# Run tests
-fvm dart test
-
-# Run static analysis
-fvm dart analyze
-
-# Format code
-fvm dart format .
-```
-
-### Debugging
-
-The project includes VS Code launch configurations for debugging:
-
-- **Debug Tests (FVM)** - Debug all tests
-- **Debug Single Test File (FVM)** - Debug the currently open test file
-
-### VS Code Configuration
-
-The project is configured to:
-
-- Use FVM's Flutter SDK automatically
-- Disable automatic pub get (use manual commands instead)
-- Format code on save
-- Apply code fixes on save
