@@ -1,1 +1,6 @@
-include: ../lib/analysis_options_comprehensive.yaml
+include: package:flutter_custom_lints/analysis_options_comprehensive.yaml
+
+linter:
+  rules:
+    - public_member_api_docs
+

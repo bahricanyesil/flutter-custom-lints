@@ -32,6 +32,7 @@ analyzer:
 custom_lint:
   rules:
     # Enable specific rules
+    - dispose_controllers
     - no_as_type_assertion
     - no_direct_iterable_access
     - no_null_force
@@ -82,6 +83,87 @@ analyzer:
 **Note:** This preset already includes the `custom_lint` plugin configuration and enables all custom lint rules from this package automatically.
 
 ## Available Lints
+
+### `dispose_controllers`
+
+Ensures that controllers (AnimationController, TextEditingController, etc.) are properly disposed to prevent memory leaks.
+
+**❌ Bad:**
+
+```dart
+class MyWidget extends StatefulWidget {
+  @override
+  _MyWidgetState createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<MyWidget> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  final TextEditingController _textController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: Duration(seconds: 1),
+      vsync: this,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(controller: _textController);
+  }
+
+  // Missing dispose() method - Memory leak!
+}
+```
+
+**✅ Good:**
+
+```dart
+class MyWidget extends StatefulWidget {
+  @override
+  _MyWidgetState createState() => _MyWidgetState();
+}
+
+class _MyWidgetState extends State<MyWidget> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  final TextEditingController _textController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController = AnimationController(
+      duration: Duration(seconds: 1),
+      vsync: this,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return TextField(controller: _textController);
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    _textController.dispose();
+    super.dispose();
+  }
+}
+```
+
+**Supported controller types:**
+
+- `AnimationController`
+- `TextEditingController`
+- `ScrollController`
+- `PageController`
+- `TabController`
+- `VideoPlayerController`
+- `FocusNode`
+- `StreamController`
+- `StreamSubscription` (uses `cancel()` instead of `dispose()`)
 
 ### `no_as_type_assertion`
 

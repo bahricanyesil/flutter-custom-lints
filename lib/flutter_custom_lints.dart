@@ -3,6 +3,7 @@
 /// This library provides lint rules that enforce best practices and prevent
 /// common coding mistakes, including:
 ///
+/// - [DisposeControllers]: Ensures controllers are properly disposed
 /// - [NoAsTypeAssertion]: Prevents unsafe type casting with `as`
 /// - [NoDirectIterableAccess]: Prevents unsafe collection access
 /// - [NoNullForce]: Prevents force unwrapping of nullable values
@@ -10,6 +11,8 @@
 library;
 
 import 'package:custom_lint_builder/custom_lint_builder.dart';
+import 'package:flutter_custom_lints/src/dispose_controllers.dart'
+    show DisposeControllers;
 
 import 'src/no_as_type_assertion.dart';
 import 'src/no_direct_iterable_access.dart';
@@ -22,6 +25,7 @@ PluginBase createPlugin() => _FlutterCustomLintsPlugin();
 class _FlutterCustomLintsPlugin extends PluginBase {
   @override
   List<LintRule> getLintRules(CustomLintConfigs configs) => <LintRule>[
+    const DisposeControllers(),
     const NoAsTypeAssertion(),
     const NoNullForce(),
     const NoDirectIterableAccess(),

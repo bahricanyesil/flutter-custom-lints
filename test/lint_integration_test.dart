@@ -34,6 +34,12 @@ void main() {
         'should_pass_compare_without_case.dart': <String, int>{
           'use_compare_without_case': 0,
         },
+        'should_fail_dispose_controllers.dart': <String, int>{
+          'dispose_controllers': 5,
+        },
+        'should_pass_dispose_controllers.dart': <String, int>{
+          'dispose_controllers': 0,
+        },
       };
 
   group('AppLintsPlugin integration', () {

@@ -17,6 +17,7 @@ void main() {
   demonstrateStringComparison();
 }
 
+/// This is a test for the no_as_type_assertion lint
 void demonstrateAsTypeAssertion() {
   const Object data = 'Hello World';
 
@@ -28,6 +29,7 @@ void demonstrateAsTypeAssertion() {
   print('Safe cast: $safeStr');
 }
 
+/// This is a test for the no_direct_iterable_access lint
 void demonstrateDirectIterableAccess() {
   final List<String> items = <String>['apple', 'banana', 'cherry'];
   final List<String> emptyList = <String>[];
@@ -41,6 +43,7 @@ void demonstrateDirectIterableAccess() {
   print('Safe first item: $safeFirst');
 }
 
+/// This is a test for the no_null_force lint
 void demonstrateNullForce() {
   const String nullableString = 'Hello';
   String? actuallyNull;
@@ -53,6 +56,7 @@ void demonstrateNullForce() {
   print('Safe value: $safe');
 }
 
+/// This is a test for the use_compare_without_case lint
 void demonstrateStringComparison() {
   const String str1 = 'Hello';
   const String str2 = 'HELLO';
@@ -76,8 +80,10 @@ extension on String {
   }
 }
 
+/// This is a test for the safe_first lint
 // ignore: prefer-match-file-name
 extension IterableUtilExtensions<T> on Iterable<T> {
+  /// This is a test for the safe_first lint
   T? get safeFirst {
     if (isEmpty) return null;
     return first;
