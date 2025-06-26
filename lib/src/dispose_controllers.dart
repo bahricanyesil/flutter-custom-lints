@@ -246,20 +246,33 @@ class DisposeControllers extends DartLintRule {
     Set<String> disposedControllers,
   ) {
     if (expression is MethodInvocation) {
-      final String methodName = expression.methodName.name;
+      _checkMethodInvocation(expression, disposedControllers);
+    } else if (expression is AwaitExpression) {
+      // Handle awaited disposal calls like: await controller.close()
+      final Expression awaitedExpression = expression.expression;
+      if (awaitedExpression is MethodInvocation) {
+        _checkMethodInvocation(awaitedExpression, disposedControllers);
+      }
+    }
+  }
 
-      // Accept dispose(), close(), or cancel() methods
-      if (methodName == 'dispose' ||
-          methodName == 'close' ||
-          methodName == 'cancel') {
-        final Expression? target = expression.target;
-        if (target is SimpleIdentifier) {
-          disposedControllers.add(target.name);
-        } else if (target is PropertyAccess) {
-          final Expression? propertyTarget = target.target;
-          if (propertyTarget is ThisExpression) {
-            disposedControllers.add(target.propertyName.name);
-          }
+  void _checkMethodInvocation(
+    MethodInvocation methodInvocation,
+    Set<String> disposedControllers,
+  ) {
+    final String methodName = methodInvocation.methodName.name;
+
+    // Accept dispose(), close(), or cancel() methods
+    if (methodName == 'dispose' ||
+        methodName == 'close' ||
+        methodName == 'cancel') {
+      final Expression? target = methodInvocation.target;
+      if (target is SimpleIdentifier) {
+        disposedControllers.add(target.name);
+      } else if (target is PropertyAccess) {
+        final Expression? propertyTarget = target.target;
+        if (propertyTarget is ThisExpression) {
+          disposedControllers.add(target.propertyName.name);
         }
       }
     }

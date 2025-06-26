@@ -1,3 +1,7 @@
+## 1.0.9
+
+- Improve dispose controller lint rule to consider async dispose methods.
+
 ## 1.0.8
 
 - Improve dispose controller lint rule to consider isClosed check before.

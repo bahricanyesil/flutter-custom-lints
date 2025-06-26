@@ -1,6 +1,6 @@
 // ignore_for_file: unused_local_variable, avoid_print, unnecessary_type_check
 
-void main() {
+Future<void> main() async {
   // Examples that will trigger lint warnings
   print('Flutter Custom Lints Example');
 
@@ -17,7 +17,7 @@ void main() {
   demonstrateStringComparison();
 
   // Example 5: dispose_controllers
-  demonstrateDisposeControllers();
+  await demonstrateDisposeControllers();
 }
 
 /// This is a test for the no_as_type_assertion lint
@@ -94,12 +94,13 @@ extension IterableUtilExtensions<T> on Iterable<T> {
 }
 
 /// This is a test for the dispose_controllers lint
-void demonstrateDisposeControllers() {
+Future<void> demonstrateDisposeControllers() async {
   print('Creating widgets with controllers...');
 
   // Create instances to demonstrate the lint rule
   final GoodControllerWidget goodWidget = GoodControllerWidget();
   final ConditionalDisposeWidget conditionalWidget = ConditionalDisposeWidget();
+  final AsyncDisposeWidget asyncWidget = AsyncDisposeWidget();
 
   // Initialize and dispose properly
   goodWidget
@@ -109,6 +110,10 @@ void demonstrateDisposeControllers() {
   conditionalWidget
     ..initControllers()
     ..dispose();
+
+  // Demonstrate async disposal
+  asyncWidget.initControllers();
+  await asyncWidget.dispose();
 
   print('Controllers properly disposed');
 }
@@ -188,6 +193,30 @@ class ConditionalDisposeWidget {
     // This pattern is now properly recognized by the lint rule
     if (!_visibilityController.isClosed) {
       _visibilityController.close();
+    }
+  }
+}
+
+/// ✅ Good example: Async disposal with await (like your case)
+class AsyncDisposeWidget {
+  late StreamController<String> _notificationController;
+  late StreamController<int> _dataController;
+
+  /// This is a test for the dispose_controllers lint
+  void initControllers() {
+    _notificationController = StreamController<String>();
+    _dataController = StreamController<int>();
+  }
+
+  /// This is a test for the dispose_controllers lint
+  Future<String?> dispose() async {
+    try {
+      // This pattern with await is now properly recognized
+      _notificationController.close();
+      _dataController.close();
+      return null;
+    } catch (e) {
+      return 'Disposal failed: $e';
     }
   }
 }
