@@ -15,6 +15,9 @@ void main() {
 
   // Example 4: use_compare_without_case
   demonstrateStringComparison();
+
+  // Example 5: dispose_controllers
+  demonstrateDisposeControllers();
 }
 
 /// This is a test for the no_as_type_assertion lint
@@ -87,5 +90,104 @@ extension IterableUtilExtensions<T> on Iterable<T> {
   T? get safeFirst {
     if (isEmpty) return null;
     return first;
+  }
+}
+
+/// This is a test for the dispose_controllers lint
+void demonstrateDisposeControllers() {
+  print('Creating widgets with controllers...');
+
+  // Create instances to demonstrate the lint rule
+  final GoodControllerWidget goodWidget = GoodControllerWidget();
+  final ConditionalDisposeWidget conditionalWidget = ConditionalDisposeWidget();
+
+  // Initialize and dispose properly
+  goodWidget
+    ..initControllers()
+    ..dispose();
+
+  conditionalWidget
+    ..initControllers()
+    ..dispose();
+
+  print('Controllers properly disposed');
+}
+
+/// Mock controller classes for the example
+class AnimationController {
+  bool _disposed = false;
+
+  /// This is a test for the dispose_controllers lint
+  bool get isDisposed => _disposed;
+
+  /// This is a test for the dispose_controllers lint
+  void dispose() {
+    _disposed = true;
+  }
+}
+
+/// This is a test for the dispose_controllers lint
+class StreamController<T> {
+  bool _closed = false;
+
+  /// This is a test for the dispose_controllers lint
+  bool get isClosed => _closed;
+
+  /// This is a test for the dispose_controllers lint
+  void close() {
+    _closed = true;
+  }
+}
+
+// ❌ This would trigger dispose_controllers lint
+// class BadControllerWidget {
+//   late AnimationController _animationController;
+//   late StreamController<String> _streamController;
+//
+//   void initControllers() {
+//     _animationController = AnimationController();
+//     _streamController = StreamController<String>();
+//   }
+//
+//   // Missing dispose() method - would trigger lint error
+// }
+
+/// ✅ Good example: Proper disposal
+class GoodControllerWidget {
+  late AnimationController _animationController;
+  late StreamController<String> _streamController;
+
+  /// This is a test for the dispose_controllers lint
+  void initControllers() {
+    _animationController = AnimationController();
+    _streamController = StreamController<String>();
+  }
+
+  /// This is a test for the dispose_controllers lint
+  void dispose() {
+    _animationController.dispose();
+    _streamController.close();
+  }
+}
+
+/// ✅ Good example: Conditional disposal (like your case)
+class ConditionalDisposeWidget {
+  late StreamController<String> _visibilityController;
+  bool _isDisposed = false;
+
+  /// This is a test for the dispose_controllers lint
+  void initControllers() {
+    _visibilityController = StreamController<String>();
+  }
+
+  /// This is a test for the dispose_controllers lint
+  void dispose() {
+    if (_isDisposed) return;
+    _isDisposed = true;
+
+    // This pattern is now properly recognized by the lint rule
+    if (!_visibilityController.isClosed) {
+      _visibilityController.close();
+    }
   }
 }

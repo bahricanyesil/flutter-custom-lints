@@ -1,3 +1,7 @@
+## 1.0.8
+
+- Improve dispose controller lint rule to consider isClosed check before.
+
 ## 1.0.7
 
 - **Enhancement**: `dispose_controllers` lint rule now accepts `close()` method in addition to `dispose()`

@@ -173,27 +173,92 @@ class DisposeControllers extends DartLintRule {
         : null;
     if (body == null) return;
 
-    for (final Statement statement in body.block.statements) {
-      // Look for disposal method calls
-      if (statement is ExpressionStatement) {
-        final Expression expression = statement.expression;
+    _collectDisposedControllersFromStatements(
+      body.block.statements,
+      disposedControllers,
+    );
+  }
 
-        if (expression is MethodInvocation) {
-          final String methodName = expression.methodName.name;
+  void _collectDisposedControllersFromStatements(
+    List<Statement> statements,
+    Set<String> disposedControllers,
+  ) {
+    for (final Statement statement in statements) {
+      _collectDisposedControllersFromStatement(statement, disposedControllers);
+    }
+  }
 
-          // Accept dispose(), close(), or cancel() methods
-          if (methodName == 'dispose' ||
-              methodName == 'close' ||
-              methodName == 'cancel') {
-            final Expression? target = expression.target;
-            if (target is SimpleIdentifier) {
-              disposedControllers.add(target.name);
-            } else if (target is PropertyAccess) {
-              final Expression? propertyTarget = target.target;
-              if (propertyTarget is ThisExpression) {
-                disposedControllers.add(target.propertyName.name);
-              }
-            }
+  void _collectDisposedControllersFromStatement(
+    Statement statement,
+    Set<String> disposedControllers,
+  ) {
+    if (statement is ExpressionStatement) {
+      _checkDisposalExpression(statement.expression, disposedControllers);
+    } else if (statement is IfStatement) {
+      // Recursively check the then statement
+      _collectDisposedControllersFromStatement(
+        statement.thenStatement,
+        disposedControllers,
+      );
+
+      // Check the else statement if it exists
+      final Statement? elseStatement = statement.elseStatement;
+      if (elseStatement != null) {
+        _collectDisposedControllersFromStatement(
+          elseStatement,
+          disposedControllers,
+        );
+      }
+    } else if (statement is Block) {
+      // Recursively check statements in blocks
+      _collectDisposedControllersFromStatements(
+        statement.statements,
+        disposedControllers,
+      );
+    } else if (statement is TryStatement) {
+      // Check the try block
+      _collectDisposedControllersFromStatement(
+        statement.body,
+        disposedControllers,
+      );
+
+      // Check catch clauses
+      for (final CatchClause catchClause in statement.catchClauses) {
+        _collectDisposedControllersFromStatement(
+          catchClause.body,
+          disposedControllers,
+        );
+      }
+
+      // Check finally block
+      final Block? finallyBlock = statement.finallyBlock;
+      if (finallyBlock != null) {
+        _collectDisposedControllersFromStatement(
+          finallyBlock,
+          disposedControllers,
+        );
+      }
+    }
+  }
+
+  void _checkDisposalExpression(
+    Expression expression,
+    Set<String> disposedControllers,
+  ) {
+    if (expression is MethodInvocation) {
+      final String methodName = expression.methodName.name;
+
+      // Accept dispose(), close(), or cancel() methods
+      if (methodName == 'dispose' ||
+          methodName == 'close' ||
+          methodName == 'cancel') {
+        final Expression? target = expression.target;
+        if (target is SimpleIdentifier) {
+          disposedControllers.add(target.name);
+        } else if (target is PropertyAccess) {
+          final Expression? propertyTarget = target.target;
+          if (propertyTarget is ThisExpression) {
+            disposedControllers.add(target.propertyName.name);
           }
         }
       }
