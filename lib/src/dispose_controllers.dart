@@ -10,7 +10,7 @@ class DisposeControllers extends DartLintRule {
   static const LintCode _code = LintCode(
     name: 'dispose_controllers',
     problemMessage:
-        '''Controllers must be disposed to prevent memory leaks. Add a dispose() call for this controller in the dispose() method.''',
+        '''Controllers must be disposed to prevent memory leaks. Add a dispose() or close() call for this controller in the dispose() method.''',
     errorSeverity: ErrorSeverity.ERROR,
   );
 
@@ -25,6 +25,12 @@ class DisposeControllers extends DartLintRule {
     'FocusNode',
     'StreamController',
     'StreamSubscription',
+    'Timer',
+    'IOSink',
+    'HttpClient',
+    'WebSocket',
+    'RandomAccessFile',
+    'Socket',
   };
 
   @override
@@ -168,13 +174,17 @@ class DisposeControllers extends DartLintRule {
     if (body == null) return;
 
     for (final Statement statement in body.block.statements) {
-      // Look for dispose calls like: controller.dispose()
+      // Look for disposal method calls
       if (statement is ExpressionStatement) {
         final Expression expression = statement.expression;
 
         if (expression is MethodInvocation) {
           final String methodName = expression.methodName.name;
-          if (methodName == 'dispose') {
+
+          // Accept dispose(), close(), or cancel() methods
+          if (methodName == 'dispose' ||
+              methodName == 'close' ||
+              methodName == 'cancel') {
             final Expression? target = expression.target;
             if (target is SimpleIdentifier) {
               disposedControllers.add(target.name);
@@ -183,17 +193,6 @@ class DisposeControllers extends DartLintRule {
               if (propertyTarget is ThisExpression) {
                 disposedControllers.add(target.propertyName.name);
               }
-            }
-          }
-        }
-
-        // Look for cancel calls like: subscription.cancel()
-        if (expression is MethodInvocation) {
-          final String methodName = expression.methodName.name;
-          if (methodName == 'cancel') {
-            final Expression? target = expression.target;
-            if (target is SimpleIdentifier) {
-              disposedControllers.add(target.name);
             }
           }
         }

@@ -1,3 +1,10 @@
+## 1.0.7
+
+- **Enhancement**: `dispose_controllers` lint rule now accepts `close()` method in addition to `dispose()`
+- Added support for more controller types that use `close()`: Timer, IOSink, HttpClient, WebSocket, RandomAccessFile, Socket
+- Updated error messages to reflect that both `dispose()` and `close()` methods are acceptable
+- Enhanced documentation with examples of both disposal patterns
+
 ## 1.0.6
 
 - **Bug Fixes**: Fixed critical exceptions that could occur during AST analysis

@@ -18,6 +18,7 @@ class PageController {
 
 class StreamController<T> {
   void dispose() {}
+  void close() {}
 }
 
 class StreamSubscription<T> {
@@ -71,6 +72,15 @@ class GoodStreamWidget {
 
   void dispose() {
     _streamController.dispose();
+  }
+}
+
+// This should pass - StreamController with close() method
+class GoodStreamWidgetWithClose {
+  final StreamController<String> _streamController = StreamController<String>();
+
+  void dispose() {
+    _streamController.close();
   }
 }
 

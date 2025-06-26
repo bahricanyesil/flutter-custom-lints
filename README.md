@@ -151,19 +151,54 @@ class _MyWidgetState extends State<MyWidget> with SingleTickerProviderStateMixin
     super.dispose();
   }
 }
+
+// Alternative example using close() method
+class StreamExampleWidget extends StatefulWidget {
+  @override
+  _StreamExampleWidgetState createState() => _StreamExampleWidgetState();
+}
+
+class _StreamExampleWidgetState extends State<StreamExampleWidget> {
+  final StreamController<String> _streamController = StreamController<String>();
+  final HttpClient _httpClient = HttpClient();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
+  }
+
+  @override
+  void dispose() {
+    _streamController.close(); // Using close() instead of dispose()
+    _httpClient.close();       // I/O resources typically use close()
+    super.dispose();
+  }
+}
 ```
 
 **Supported controller types:**
 
-- `AnimationController`
-- `TextEditingController`
-- `ScrollController`
-- `PageController`
-- `TabController`
-- `VideoPlayerController`
-- `FocusNode`
-- `StreamController`
-- `StreamSubscription` (uses `cancel()` instead of `dispose()`)
+- `AnimationController` (uses `dispose()`)
+- `TextEditingController` (uses `dispose()`)
+- `ScrollController` (uses `dispose()`)
+- `PageController` (uses `dispose()`)
+- `TabController` (uses `dispose()`)
+- `VideoPlayerController` (uses `dispose()`)
+- `FocusNode` (uses `dispose()`)
+- `StreamController` (uses `dispose()` or `close()`)
+- `StreamSubscription` (uses `cancel()`)
+- `Timer` (uses `cancel()`)
+- `IOSink` (uses `close()`)
+- `HttpClient` (uses `close()`)
+- `WebSocket` (uses `close()`)
+- `RandomAccessFile` (uses `close()`)
+- `Socket` (uses `close()`)
+
+**Supported disposal methods:**
+
+- `dispose()` - Standard disposal method
+- `close()` - For I/O resources and streams
+- `cancel()` - For subscriptions and timers
 
 ### `no_as_type_assertion`
 

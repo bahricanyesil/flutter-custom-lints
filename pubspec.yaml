@@ -1,6 +1,6 @@
 name: flutter_custom_lints
 description: A collection of custom lint rules for Flutter and Dart projects that enforce best practices and prevent common coding mistakes.
-version: 1.0.6
+version: 1.0.7
 homepage: https://github.com/bahricanyesil/flutter-custom-lints
 repository: https://github.com/bahricanyesil/flutter-custom-lints
 issue_tracker: https://github.com/bahricanyesil/flutter-custom-lints/issues
