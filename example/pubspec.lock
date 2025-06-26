@@ -156,10 +156,11 @@ packages:
   flutter_custom_lints:
     dependency: "direct dev"
     description:
-      path: ".."
-      relative: true
-    source: path
-    version: "1.0.3"
+      name: flutter_custom_lints
+      sha256: ae962f56290a93623903c62d536340fef033827d18daef85a309971e48f4be99
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.5"
   flutter_lints:
     dependency: transitive
     description:

@@ -2,7 +2,7 @@
 
 [![pub package](https://img.shields.io/pub/v/flutter_custom_lints.svg)](https://pub.dev/packages/flutter_custom_lints)
 
-A collection of custom lint rules for Flutter and Dart projects that enforce best practices and prevent common coding mistakes.
+A collection of custom lint rules for Flutter and Dart projects that enforce best practices and prevent common coding mistakes. This package provides robust, exception-safe analysis that works reliably across different analyzer versions and code complexity levels.
 
 ## Installation
 
@@ -86,7 +86,7 @@ analyzer:
 
 ### `dispose_controllers`
 
-Ensures that controllers (AnimationController, TextEditingController, etc.) are properly disposed to prevent memory leaks.
+Ensures that controllers (AnimationController, TextEditingController, etc.) are properly disposed to prevent memory leaks. This rule includes robust error handling to work reliably with complex generic types and abstract interfaces.
 
 **❌ Bad:**
 
@@ -167,7 +167,7 @@ class _MyWidgetState extends State<MyWidget> with SingleTickerProviderStateMixin
 
 ### `no_as_type_assertion`
 
-Prevents using `as` for type assertions which can cause runtime errors.
+Prevents using `as` for type assertions which can cause runtime errors. This rule includes safe type resolution that handles complex type hierarchies and prevents analyzer exceptions during code analysis.
 
 **❌ Bad:**
 
@@ -263,6 +263,14 @@ For Flutter projects:
 ```bash
 flutter packages pub run custom_lint
 ```
+
+## Troubleshooting
+
+If you encounter any issues:
+
+1. **Exception during analysis**: The latest version (1.0.6+) includes robust error handling to prevent crashes during AST analysis
+2. **Complex generic types**: The lints now handle complex type hierarchies and abstract interfaces safely
+3. **Analyzer compatibility**: Enhanced compatibility with different analyzer versions
 
 ## Contributing
 

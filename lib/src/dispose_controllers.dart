@@ -11,7 +11,7 @@ class DisposeControllers extends DartLintRule {
     name: 'dispose_controllers',
     problemMessage:
         '''Controllers must be disposed to prevent memory leaks. Add a dispose() call for this controller in the dispose() method.''',
-    errorSeverity: ErrorSeverity.WARNING,
+    errorSeverity: ErrorSeverity.ERROR,
   );
 
   // List of controller types that need disposal
@@ -122,13 +122,22 @@ class DisposeControllers extends DartLintRule {
     // Get the type name from the AST node
     String typeName = '';
 
-    if (typeAnnotation is NamedType) {
-      // For simple types like AnimationController
-      typeName = typeAnnotation.name2.lexeme;
-    } else {
-      // Fallback to string representation for other types
+    try {
+      if (typeAnnotation is NamedType) {
+        // For simple types like AnimationController
+        // Use safe access to prevent exceptions
+        typeName = typeAnnotation.name2.lexeme;
+      } else {
+        // Fallback to string representation for other types
+        typeName = typeAnnotation.toString();
+        // Extract type name from generic types like "StreamController<String>"
+        if (typeName.contains('<')) {
+          typeName = typeName.substring(0, typeName.indexOf('<'));
+        }
+      }
+    } catch (e) {
+      // If we can't get the type name safely, use string representation
       typeName = typeAnnotation.toString();
-      // Extract type name from generic types like "StreamController<String>"
       if (typeName.contains('<')) {
         typeName = typeName.substring(0, typeName.indexOf('<'));
       }
@@ -153,7 +162,9 @@ class DisposeControllers extends DartLintRule {
     MethodDeclaration disposeMethod,
     Set<String> disposedControllers,
   ) {
-    final BlockFunctionBody? body = disposeMethod.body as BlockFunctionBody?;
+    final BlockFunctionBody? body = disposeMethod.body is BlockFunctionBody
+        ? disposeMethod.body as BlockFunctionBody
+        : null;
     if (body == null) return;
 
     for (final Statement statement in body.block.statements) {

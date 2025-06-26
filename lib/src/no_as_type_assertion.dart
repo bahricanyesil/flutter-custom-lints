@@ -77,9 +77,23 @@ class NoAsTypeAssertion extends DartLintRule {
       }
 
       // Check if the is check is for the same type as the as assertion
-      final DartType? isType = condition.type.type;
-      final DartType? asType = node.type.type;
-      if (isType != asType) {
+      try {
+        final DartType? isType = condition.type.type;
+        final DartType? asType = node.type.type;
+        if (isType != null && asType != null && isType != asType) {
+          reporter.reportError(
+            AnalysisError.forValues(
+              source: reporter.source,
+              offset: node.offset,
+              length: node.length,
+              errorCode: _code,
+              message: _code.problemMessage,
+            ),
+          );
+          return;
+        }
+      } catch (e) {
+        // If type resolution fails, report the error anyway
         reporter.reportError(
           AnalysisError.forValues(
             source: reporter.source,

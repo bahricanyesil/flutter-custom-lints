@@ -1,3 +1,11 @@
+## 1.0.6
+
+- **Bug Fixes**: Fixed critical exceptions that could occur during AST analysis
+- Added proper error handling in `dispose_controllers` lint rule when accessing type annotations
+- Added safe type resolution in `no_as_type_assertion` lint rule to prevent crashes
+- Improved robustness when analyzing complex generic types and malformed code
+- Enhanced compatibility with different analyzer versions
+
 ## 1.0.5
 
 - Revert unknowingly added lint rule
