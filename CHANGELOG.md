@@ -1,3 +1,7 @@
+## 1.0.10
+
+- Improve dispose controller lint rule to not trigger when timer and controllers are defined as fields.
+
 ## 1.0.9
 
 - Improve dispose controller lint rule to consider async dispose methods.

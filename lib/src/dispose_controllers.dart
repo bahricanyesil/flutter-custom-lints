@@ -63,7 +63,17 @@ class DisposeControllers extends DartLintRule {
           final TypeAnnotation? typeAnnotation = member.fields.type;
           if (typeAnnotation != null &&
               _isControllerTypeFromAnnotation(typeAnnotation)) {
-            controllerFields[fieldName] = member;
+            // Skip nullable fields without initializers - they're likely just
+            // state holders, not managed resources
+            final bool isNullable = _isNullableType(typeAnnotation);
+            final bool hasInitializer = variable.initializer != null;
+
+            // Only track fields that are either:
+            // 1. Non-nullable (definitely need disposal)
+            // 2. Nullable but have initializers (actively managing resources)
+            if (!isNullable || hasInitializer) {
+              controllerFields[fieldName] = member;
+            }
           }
         }
       }
@@ -162,6 +172,17 @@ class DisposeControllers extends DartLintRule {
     }
 
     return false;
+  }
+
+  bool _isNullableType(TypeAnnotation typeAnnotation) {
+    // Check if the type is nullable (ends with ?)
+    if (typeAnnotation is NamedType) {
+      return typeAnnotation.question != null;
+    }
+
+    // For other types, check string representation
+    final String typeString = typeAnnotation.toString();
+    return typeString.endsWith('?');
   }
 
   void _collectDisposedControllers(

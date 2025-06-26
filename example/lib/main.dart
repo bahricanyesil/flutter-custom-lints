@@ -1,5 +1,7 @@
 // ignore_for_file: unused_local_variable, avoid_print, unnecessary_type_check
 
+import 'dart:async';
+
 Future<void> main() async {
   // Examples that will trigger lint warnings
   print('Flutter Custom Lints Example');
@@ -219,4 +221,35 @@ class AsyncDisposeWidget {
       return 'Disposal failed: $e';
     }
   }
+}
+
+/// Information about a toast timer
+/// ✅ This class has a Timer? field but correctly doesn't trigger the lint rule
+/// because nullable fields without initializers are considered state holders,
+/// not managed resources that need disposal
+class ToastTimerInfo {
+  /// Create toast timer info
+  ToastTimerInfo({
+    required this.toastId,
+    required this.remainingDuration,
+    required this.createdAt,
+    required this.isPaused,
+  });
+
+  /// Toast ID
+  final String toastId;
+
+  /// Remaining duration before dismissal
+  Duration remainingDuration;
+
+  /// When the toast was created
+  final DateTime createdAt;
+
+  /// Whether the timer is currently paused
+  bool isPaused;
+
+  /// Active timer (null if paused) - nullable field without initializer
+  /// This won't trigger the dispose_controllers lint because it's clearly
+  /// just a state holder, not a managed resource
+  Timer? timer;
 }

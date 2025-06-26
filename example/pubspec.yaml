@@ -7,4 +7,5 @@ environment:
 
 dev_dependencies:
   custom_lint: ^0.7.5
-  flutter_custom_lints: ^1.0.5
+  flutter_custom_lints:
+    path: ../
