@@ -1,3 +1,7 @@
+## 1.0.5
+
+- Revert unknowingly added lint rule
+
 ## 1.0.4
 
 - Add `dispose_controllers` lint rule to enforce proper disposal of controllers like AnimationController, TextEditingController, etc.
