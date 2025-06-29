@@ -1,3 +1,7 @@
+## 1.0.11
+
+- Improve dispose controller lint rule to not trigger when close method is used instead of dispose.
+
 ## 1.0.10
 
 - Improve dispose controller lint rule to not trigger when timer and controllers are defined as fields.

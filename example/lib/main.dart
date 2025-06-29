@@ -253,3 +253,13 @@ class ToastTimerInfo {
   /// just a state holder, not a managed resource
   Timer? timer;
 }
+
+/// This is a test for the dispose_controllers lint
+class AuthBloc {
+  late StreamSubscription<int> _authStateSubscription;
+
+  /// This is a test for the dispose_controllers lint
+  Future<void> close() async {
+    await _authStateSubscription.cancel();
+  }
+}

@@ -79,10 +79,11 @@ class DisposeControllers extends DartLintRule {
       }
     }
 
-    // Check if the class has a dispose method and collect disposed controllers
+    // Check if the class has a dispose or close method and collect disposed controllers
     MethodDeclaration? disposeMethod;
     for (final ClassMember member in classNode.members) {
-      if (member is MethodDeclaration && member.name.lexeme == 'dispose') {
+      if (member is MethodDeclaration &&
+          (member.name.lexeme == 'dispose' || member.name.lexeme == 'close')) {
         disposeMethod = member;
         _collectDisposedControllers(member, disposedControllers);
         break;
@@ -98,7 +99,7 @@ class DisposeControllers extends DartLintRule {
           length: classNode.name.length,
           errorCode: _code,
           message:
-              '''Class with controllers must have a dispose() method to clean up resources.''',
+              '''Class with controllers must have a dispose() or close() method to clean up resources.''',
         ),
       );
     } else if (controllerFields.isNotEmpty && disposeMethod != null) {
