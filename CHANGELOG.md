@@ -1,3 +1,12 @@
+
+# 1.0.12 - 01.07.2025
+
+- **New lint rule**: Added `no_null_force` to prevent unsafe use of the null force operator (`!`)
+- Enhanced `no_direct_iterable_access` rule to properly distinguish between read and write operations on collections
+- Expanded example application with comprehensive demonstrations of all lint rules
+- Updated comprehensive analysis options with latest Flutter linting best practices
+- Improved error messages and documentation for better developer experience
+
 ## 1.0.11
 
 - Improve dispose controller lint rule to not trigger when close method is used instead of dispose.

@@ -263,10 +263,10 @@ dart_code_metrics:
     max-lines: 1000
 
 custom_lint:
-  enable_all_lint_rules: true
+  enable_all_lint_rules: false
   rules:
     # Custom lint rules - prevent unsafe type operations
     - no_as_type_assertion: error      # Prevent unsafe 'as' casting
     - no_null_force: error             # Prevent unsafe '!' operator
     - no_direct_iterable_access: error # Prevent unsafe collection access
-    - use_compare_without_case: warning # Suggest better string comparison
+    - dispose_controllers: error

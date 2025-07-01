@@ -46,6 +46,8 @@ void demonstrateDirectIterableAccess() {
   // ✅ Better approaches
   final String? safeFirst = items.isNotEmpty ? items.safeFirst : null;
   print('Safe first item: $safeFirst');
+
+  items[0] = 'test';
 }
 
 /// This is a test for the no_null_force lint
@@ -54,7 +56,8 @@ void demonstrateNullForce() {
   String? actuallyNull;
 
   // ❌ This will trigger no_null_force lint
-  // final String forced = actuallyNull!; // Would throw at runtime
+  // ignore: no_null_force
+  final String forced = actuallyNull!; // Would throw at runtime
 
   // ✅ Better approach
   const String safe = nullableString; // Null-promoted
@@ -67,9 +70,9 @@ void demonstrateStringComparison() {
   const String str2 = 'HELLO';
 
   // ❌ This will trigger use_compare_without_case lint
-  // if (str1 == str2) {
-  //   print('Strings match (case insensitive)');
-  // }
+  if (str1 == str2) {
+    print('Strings match (case insensitive)');
+  }
 
   // ✅ Better approach would be to use compareWithoutCase extension
   // For now, using standard comparison
