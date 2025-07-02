@@ -301,4 +301,26 @@ class NavigationAction {
     final Duration timeSinceLastLoad = DateTime.now().difference(lastLoadTime!);
     return timeSinceLastLoad < const Duration(seconds: 10);
   }
+
+  /// This is a test for the no_null_force lint
+  Map<String, String> pathParamsWithAction() {
+    const _Action action = _Action(
+      pathParams: <String, String>{'test': 'test'},
+    );
+    return pathParamAsMap(action);
+  }
+
+  /// This is a test for the no_null_force lint
+  // ignore: library_private_types_in_public_api
+  Map<String, String> pathParamAsMap(_Action action) {
+    final Map<String, String> pathParams = <String, String>{
+      if (action.pathParams != null) ...action.pathParams!,
+    };
+    return pathParams;
+  }
+}
+
+class _Action {
+  const _Action({this.pathParams});
+  final Map<String, String>? pathParams;
 }

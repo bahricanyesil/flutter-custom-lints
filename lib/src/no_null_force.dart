@@ -53,7 +53,7 @@ class NoNullForce extends DartLintRule {
             }
           }
           // Case 3: Check for collection literal if conditions
-          // e.g., {if (x != null) 'key': x!}
+          // e.g., {if (x != null) 'key': x!} or {if (x != null) ...x!}
           else if (currentNode is MapLiteralEntry ||
               currentNode is CollectionElement) {
             // Look for parent SetOrMapLiteral or ListLiteral
@@ -84,6 +84,33 @@ class NoNullForce extends DartLintRule {
                 break;
               }
               parentLiteral = parentLiteral.parent;
+            }
+          }
+          // Case 3b: Handle spread elements specifically
+          // e.g., {if (x != null) ...x!}
+          else if (currentNode is SpreadElement) {
+            // Check if this spread element is within an if element
+            AstNode? ifElement = currentNode.parent;
+            while (ifElement != null) {
+              if (ifElement is IfElement) {
+                final Expression condition = ifElement.expression;
+                if (_isNullCheckCondition(condition)) {
+                  final String? checkedVar = _getCheckedVariableName(condition);
+                  final String? forcedVar = _getVariableName(node.operand);
+
+                  if (checkedVar != null &&
+                      forcedVar != null &&
+                      checkedVar == forcedVar) {
+                    return;
+                  }
+                }
+                break;
+              }
+              // Stop if we reach a collection literal
+              if (ifElement is SetOrMapLiteral || ifElement is ListLiteral) {
+                break;
+              }
+              ifElement = ifElement.parent;
             }
           }
           currentNode = currentNode.parent;
@@ -196,7 +223,8 @@ class NoNullForce extends DartLintRule {
     return false;
   }
 
-  /// Check if the condition is checking for null (x == null) vs not null (x != null)
+  /// Check if the condition is checking for null (x == null)
+  /// vs not null (x != null)
   bool _isCheckingForNull(Expression condition) {
     if (condition is BinaryExpression) {
       return condition.operator.type == TokenType.EQ_EQ;
@@ -232,6 +260,14 @@ class NoNullForce extends DartLintRule {
   String? _getVariableName(Expression? expression) {
     if (expression is SimpleIdentifier) {
       return expression.name;
+    } else if (expression is PropertyAccess) {
+      // Handle property access like "object.property"
+      final String? target = _getVariableName(expression.target);
+      final String propertyName = expression.propertyName.name;
+      return target != null ? '$target.$propertyName' : null;
+    } else if (expression is PrefixedIdentifier) {
+      // Handle prefixed identifier like "object.property"
+      return '${expression.prefix.name}.${expression.identifier.name}';
     }
     return null;
   }

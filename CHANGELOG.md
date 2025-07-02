@@ -1,3 +1,11 @@
+# 1.0.15 - 02.07.2025
+
+- **Enhanced `no_null_force` lint rule**:
+  - Fixed false positive for spread operator usage in collection literals with null checks (e.g., `{if (action.pathParams != null) ...action.pathParams!}`)
+  - Added proper handling of `SpreadElement` nodes within if conditions in collection literals
+  - Enhanced variable name detection to support property access expressions like `object.property`
+  - Improved pattern matching for complex expressions in null-safe contexts
+
 # 1.0.14 - 02.07.2025
 
 - **Enhanced `no_null_force` lint rule**:
