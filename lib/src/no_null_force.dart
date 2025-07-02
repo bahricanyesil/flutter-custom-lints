@@ -161,7 +161,8 @@ class NoNullForce extends DartLintRule {
           if (checkedVar == variableName) {
             // Check if the then statement has an early return
             if (_hasEarlyReturn(statement.thenStatement)) {
-              // Check if it's checking for null (x == null) rather than not null
+              // Check if it's checking for null
+              // (x == null) rather than not null
               final bool isCheckingForNull = _isCheckingForNull(condition);
               if (isCheckingForNull) {
                 return true;
