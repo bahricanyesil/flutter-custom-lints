@@ -41,12 +41,8 @@ class NoNullForce extends DartLintRule {
         while (currentNode != null) {
           if (currentNode is IfStatement) {
             final Expression condition = currentNode.expression;
-            if (condition is BinaryExpression &&
-                condition.operator.type == TokenType.EQ_EQ &&
-                condition.rightOperand is NullLiteral) {
-              final String? checkedVar = _getVariableName(
-                condition.leftOperand,
-              );
+            if (_isNullCheckCondition(condition)) {
+              final String? checkedVar = _getCheckedVariableName(condition);
               final String? forcedVar = _getVariableName(node.operand);
 
               if (checkedVar != null &&
@@ -54,6 +50,40 @@ class NoNullForce extends DartLintRule {
                   checkedVar == forcedVar) {
                 return;
               }
+            }
+          }
+          // Case 3: Check for collection literal if conditions
+          // e.g., {if (x != null) 'key': x!}
+          else if (currentNode is MapLiteralEntry ||
+              currentNode is CollectionElement) {
+            // Look for parent SetOrMapLiteral or ListLiteral
+            AstNode? parentLiteral = currentNode.parent;
+            while (parentLiteral != null) {
+              if (parentLiteral is SetOrMapLiteral ||
+                  parentLiteral is ListLiteral) {
+                // Check if this is within an if element
+                AstNode? ifElement = currentNode;
+                while (ifElement != null && ifElement != parentLiteral) {
+                  if (ifElement is IfElement) {
+                    final Expression condition = ifElement.expression;
+                    if (_isNullCheckCondition(condition)) {
+                      final String? checkedVar = _getCheckedVariableName(
+                        condition,
+                      );
+                      final String? forcedVar = _getVariableName(node.operand);
+
+                      if (checkedVar != null &&
+                          forcedVar != null &&
+                          checkedVar == forcedVar) {
+                        return;
+                      }
+                    }
+                  }
+                  ifElement = ifElement.parent;
+                }
+                break;
+              }
+              parentLiteral = parentLiteral.parent;
             }
           }
           currentNode = currentNode.parent;
@@ -70,6 +100,31 @@ class NoNullForce extends DartLintRule {
         );
       }
     });
+  }
+
+  /// Check if the condition is a null check (either x == null or x != null)
+  bool _isNullCheckCondition(Expression condition) {
+    if (condition is BinaryExpression) {
+      final TokenType operatorType = condition.operator.type;
+      return (operatorType == TokenType.EQ_EQ ||
+              operatorType == TokenType.BANG_EQ) &&
+          (condition.rightOperand is NullLiteral ||
+              condition.leftOperand is NullLiteral);
+    }
+    return false;
+  }
+
+  /// Get the variable name from a null check condition
+  String? _getCheckedVariableName(Expression condition) {
+    if (condition is BinaryExpression) {
+      // Handle both x == null and x != null patterns
+      if (condition.rightOperand is NullLiteral) {
+        return _getVariableName(condition.leftOperand);
+      } else if (condition.leftOperand is NullLiteral) {
+        return _getVariableName(condition.rightOperand);
+      }
+    }
+    return null;
   }
 
   String? _getVariableName(Expression? expression) {

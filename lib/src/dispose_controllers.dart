@@ -79,7 +79,8 @@ class DisposeControllers extends DartLintRule {
       }
     }
 
-    // Check if the class has a dispose or close method and collect disposed controllers
+    // Check if the class has a dispose or close method
+    // and collect disposed controllers
     MethodDeclaration? disposeMethod;
     for (final ClassMember member in classNode.members) {
       if (member is MethodDeclaration &&

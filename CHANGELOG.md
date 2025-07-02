@@ -1,3 +1,24 @@
+# 1.0.13 - 02.07.2025
+
+- **Enhanced `dispose_controllers` lint rule**:
+  - Improved handling of late fields without initializers (now correctly treats them as state holders rather than managed resources)
+  - Enhanced nullable field detection to avoid false positives for fields that are just state holders
+  - Added support for `cancel()` method in addition to `dispose()` and `close()`
+  - Better conditional disposal detection within if statements, try-catch blocks, and other control structures
+  - Improved async disposal pattern recognition with proper await expression handling
+  - Enhanced error reporting and robustness for edge cases
+
+- **Enhanced `no_null_force` lint rule**:
+  - Added support for null-safety checking in collection literals with if conditions (e.g., `{if (x != null) 'key': x!}`)
+  - Improved detection of null checks in various contexts including nested conditions
+  - Better pattern matching for legitimate null force usage after proper null checks
+
+- **Comprehensive example application updates**:
+  - Added detailed demonstrations of all lint rules with both good and bad examples
+  - Added mock controller classes to showcase proper disposal patterns
+  - Included examples of conditional disposal, async disposal, and edge cases
+  - Added examples of classes that correctly avoid triggering lint rules (like nullable Timer fields used as state holders)
+  - Enhanced documentation with clear explanations of each lint rule's purpose
 
 # 1.0.12 - 01.07.2025
 

@@ -266,3 +266,26 @@ class AuthBloc {
     await _authStateSubscription.cancel();
   }
 }
+
+/// Represents a navigation action that can be configured via JSON
+/// Compatible with both Flutter and JavaScript web applications
+class NavigationAction {
+  /// Create navigation action
+  const NavigationAction({this.pathParams});
+
+  /// Path params
+  final Map<String, String>? pathParams;
+
+  /// Create navigation action from map
+  NavigationAction fromMap(Map<String, dynamic> map) {
+    return NavigationAction(pathParams: pathParams);
+  }
+
+  /// Convert navigation action to map
+  Map<String, Object> toMap() {
+    return <String, Object>{if (pathParams != null) 'pathParams': pathParams!};
+  }
+
+  /// Get props
+  List<Object?> get props => <Object?>[pathParams];
+}
