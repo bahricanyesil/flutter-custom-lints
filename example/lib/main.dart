@@ -271,7 +271,7 @@ class AuthBloc {
 /// Compatible with both Flutter and JavaScript web applications
 class NavigationAction {
   /// Create navigation action
-  const NavigationAction({this.pathParams, this.lastLoadTime});
+  NavigationAction({this.pathParams, this.lastLoadTime});
 
   /// Path params
   final Map<String, String>? pathParams;
@@ -317,6 +317,17 @@ class NavigationAction {
       if (action.pathParams != null) ...action.pathParams!,
     };
     return pathParams;
+  }
+
+  String? _instance;
+
+  /// This is a test for the no_null_force lint
+  String? testAssignment() {
+    if (_instance == null) {
+      _instance = 'Test';
+      print('HERE');
+    }
+    return _instance!;
   }
 }
 

@@ -1,3 +1,10 @@
+# 1.0.16 - 02.07.2025
+
+- **Enhanced `no_null_force` lint rule**:
+  - Added support for null-check-with-assignment patterns (e.g., `if (x == null) { x = value; } ... x!`)
+  - Improved recognition of safe null force usage after variable assignment within null checks
+  - Enhanced pattern detection for variables that are guaranteed to be non-null after conditional assignment
+
 # 1.0.15 - 02.07.2025
 
 - **Enhanced `no_null_force` lint rule**:

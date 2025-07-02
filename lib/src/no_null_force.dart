@@ -121,6 +121,12 @@ class NoNullForce extends DartLintRule {
           return;
         }
 
+        // Case 5: Check for assignment patterns after null checks
+        // e.g., if (x == null) { x = value; } ... x!
+        if (_isAfterNullCheckAssignment(node)) {
+          return;
+        }
+
         reporter.reportError(
           AnalysisError.forValues(
             source: reporter.source,
@@ -270,5 +276,91 @@ class NoNullForce extends DartLintRule {
       return '${expression.prefix.name}.${expression.identifier.name}';
     }
     return null;
+  }
+
+  /// Check if the null force is used after a null check with assignment pattern
+  bool _isAfterNullCheckAssignment(PostfixExpression node) {
+    final String? forcedVar = _getVariableName(node.operand);
+    if (forcedVar == null) return false;
+
+    // Find the containing function/method
+    AstNode? currentNode = node;
+    while (currentNode != null) {
+      if (currentNode is MethodDeclaration ||
+          currentNode is FunctionDeclaration ||
+          currentNode is FunctionExpression) {
+        break;
+      }
+      currentNode = currentNode.parent;
+    }
+
+    if (currentNode == null) return false;
+
+    // Get the function body
+    FunctionBody? body;
+    if (currentNode is MethodDeclaration) {
+      body = currentNode.body;
+    } else if (currentNode is FunctionDeclaration) {
+      body = currentNode.functionExpression.body;
+    } else if (currentNode is FunctionExpression) {
+      body = currentNode.body;
+    }
+
+    if (body is! BlockFunctionBody) return false;
+
+    // Check if there's a null check with assignment before this node
+    return _hasNullCheckWithAssignment(body.block, node, forcedVar);
+  }
+
+  /// Check if there's a null check with assignment pattern in the block
+  bool _hasNullCheckWithAssignment(
+    Block block,
+    PostfixExpression targetNode,
+    String variableName,
+  ) {
+    for (final Statement statement in block.statements) {
+      // Stop checking if we've reached the target node
+      if (_statementContainsNode(statement, targetNode)) {
+        break;
+      }
+
+      // Check for if statement with null check and assignment
+      if (statement is IfStatement) {
+        final Expression condition = statement.expression;
+        if (_isNullCheckCondition(condition)) {
+          final String? checkedVar = _getCheckedVariableName(condition);
+          if (checkedVar == variableName) {
+            // Check if it's checking for null (x == null) rather than not null
+            final bool isCheckingForNull = _isCheckingForNull(condition);
+            if (isCheckingForNull) {
+              // Check if the then statement has an assignment to the variable
+              if (_hasAssignmentToVariable(
+                statement.thenStatement,
+                variableName,
+              )) {
+                return true;
+              }
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  /// Check if a statement has an assignment to the given variable
+  bool _hasAssignmentToVariable(Statement statement, String variableName) {
+    if (statement is ExpressionStatement) {
+      final Expression expression = statement.expression;
+      if (expression is AssignmentExpression) {
+        final String? assignedVar = _getVariableName(expression.leftHandSide);
+        return assignedVar == variableName;
+      }
+    } else if (statement is Block) {
+      return statement.statements.any(
+        (Statement stmt) => _hasAssignmentToVariable(stmt, variableName),
+      );
+    }
+    return false;
   }
 }
