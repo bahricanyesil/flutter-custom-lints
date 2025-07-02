@@ -271,10 +271,13 @@ class AuthBloc {
 /// Compatible with both Flutter and JavaScript web applications
 class NavigationAction {
   /// Create navigation action
-  const NavigationAction({this.pathParams});
+  const NavigationAction({this.pathParams, this.lastLoadTime});
 
   /// Path params
   final Map<String, String>? pathParams;
+
+  /// This is a test for the no_null_force lint
+  final DateTime? lastLoadTime;
 
   /// Create navigation action from map
   NavigationAction fromMap(Map<String, dynamic> map) {
@@ -288,4 +291,14 @@ class NavigationAction {
 
   /// Get props
   List<Object?> get props => <Object?>[pathParams];
+
+  /// This is a test for the no_null_force lint
+  bool isCacheValid() {
+    if (lastLoadTime == null) {
+      return false;
+    }
+
+    final Duration timeSinceLastLoad = DateTime.now().difference(lastLoadTime!);
+    return timeSinceLastLoad < const Duration(seconds: 10);
+  }
 }

@@ -159,7 +159,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.12"
+    version: "1.0.14"
   flutter_lints:
     dependency: transitive
     description:

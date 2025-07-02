@@ -1,3 +1,11 @@
+# 1.0.14 - 02.07.2025
+
+- **Enhanced `no_null_force` lint rule**:
+  - Added support for early return patterns after null checks (e.g., `if (variable == null) return; ... variable!`)
+  - Improved recognition of type promotion scenarios where variables are guaranteed to be non-null after early return null checks
+  - Enhanced pattern matching for legitimate null force usage in methods with conditional early returns
+  - Better handling of nested functions and complex control flow structures with null checks
+
 # 1.0.13 - 02.07.2025
 
 - **Enhanced `dispose_controllers` lint rule**:

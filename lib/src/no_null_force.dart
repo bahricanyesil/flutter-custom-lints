@@ -89,6 +89,11 @@ class NoNullForce extends DartLintRule {
           currentNode = currentNode.parent;
         }
 
+        // Case 4: Check for early return patterns after null checks
+        if (_isAfterEarlyReturnNullCheck(node)) {
+          return;
+        }
+
         reporter.reportError(
           AnalysisError.forValues(
             source: reporter.source,
@@ -100,6 +105,102 @@ class NoNullForce extends DartLintRule {
         );
       }
     });
+  }
+
+  /// Check if the null force is used after an early return null check pattern
+  bool _isAfterEarlyReturnNullCheck(PostfixExpression node) {
+    final String? forcedVar = _getVariableName(node.operand);
+    if (forcedVar == null) return false;
+
+    // Find the containing function/method
+    AstNode? currentNode = node;
+    while (currentNode != null) {
+      if (currentNode is MethodDeclaration ||
+          currentNode is FunctionDeclaration ||
+          currentNode is FunctionExpression) {
+        break;
+      }
+      currentNode = currentNode.parent;
+    }
+
+    if (currentNode == null) return false;
+
+    // Get the function body
+    FunctionBody? body;
+    if (currentNode is MethodDeclaration) {
+      body = currentNode.body;
+    } else if (currentNode is FunctionDeclaration) {
+      body = currentNode.functionExpression.body;
+    } else if (currentNode is FunctionExpression) {
+      body = currentNode.body;
+    }
+
+    if (body is! BlockFunctionBody) return false;
+
+    // Check if there's an early return after null check before this node
+    return _hasEarlyReturnNullCheck(body.block, node, forcedVar);
+  }
+
+  /// Check if there's an early return after null check pattern in the block
+  bool _hasEarlyReturnNullCheck(
+    Block block,
+    PostfixExpression targetNode,
+    String variableName,
+  ) {
+    for (final Statement statement in block.statements) {
+      // Stop checking if we've reached the target node
+      if (_statementContainsNode(statement, targetNode)) {
+        break;
+      }
+
+      // Check for if statement with null check and early return
+      if (statement is IfStatement) {
+        final Expression condition = statement.expression;
+        if (_isNullCheckCondition(condition)) {
+          final String? checkedVar = _getCheckedVariableName(condition);
+          if (checkedVar == variableName) {
+            // Check if the then statement has an early return
+            if (_hasEarlyReturn(statement.thenStatement)) {
+              // Check if it's checking for null (x == null) rather than not null
+              final bool isCheckingForNull = _isCheckingForNull(condition);
+              if (isCheckingForNull) {
+                return true;
+              }
+            }
+          }
+        }
+      }
+    }
+    return false;
+  }
+
+  /// Check if a statement contains the target node
+  bool _statementContainsNode(Statement statement, AstNode targetNode) {
+    AstNode? current = targetNode;
+    while (current != null) {
+      if (current == statement) return true;
+      current = current.parent;
+    }
+    return false;
+  }
+
+  /// Check if a statement has an early return
+  bool _hasEarlyReturn(Statement statement) {
+    if (statement is ReturnStatement) {
+      return true;
+    }
+    if (statement is Block) {
+      return statement.statements.any(_hasEarlyReturn);
+    }
+    return false;
+  }
+
+  /// Check if the condition is checking for null (x == null) vs not null (x != null)
+  bool _isCheckingForNull(Expression condition) {
+    if (condition is BinaryExpression) {
+      return condition.operator.type == TokenType.EQ_EQ;
+    }
+    return false;
   }
 
   /// Check if the condition is a null check (either x == null or x != null)
