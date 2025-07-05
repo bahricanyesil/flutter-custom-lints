@@ -1,3 +1,11 @@
+# 1.0.17 - 05.07.2025
+
+- **Enhanced `no_null_force` lint rule**:
+  - Added support for null-aware assignment patterns (e.g., `x ??= value; ... x!`)
+  - Improved recognition of safe null force usage after null-aware assignment operator
+  - Enhanced pattern detection for variables that are guaranteed to be non-null after `??=` assignment
+  - Better handling of complex initialization patterns in service classes and dependency injection scenarios
+
 # 1.0.16 - 02.07.2025
 
 - **Enhanced `no_null_force` lint rule**:

@@ -127,6 +127,12 @@ class NoNullForce extends DartLintRule {
           return;
         }
 
+        // Case 6: Check for null-aware assignment patterns
+        // e.g., x ??= value; ... x!
+        if (_isAfterNullAwareAssignment(node)) {
+          return;
+        }
+
         reporter.reportError(
           AnalysisError.forValues(
             source: reporter.source,
@@ -360,6 +366,67 @@ class NoNullForce extends DartLintRule {
       return statement.statements.any(
         (Statement stmt) => _hasAssignmentToVariable(stmt, variableName),
       );
+    }
+    return false;
+  }
+
+  /// Check if the null force is used after a null-aware assignment pattern
+  bool _isAfterNullAwareAssignment(PostfixExpression node) {
+    final String? forcedVar = _getVariableName(node.operand);
+    if (forcedVar == null) return false;
+
+    // Find the containing function/method
+    AstNode? currentNode = node;
+    while (currentNode != null) {
+      if (currentNode is MethodDeclaration ||
+          currentNode is FunctionDeclaration ||
+          currentNode is FunctionExpression) {
+        break;
+      }
+      currentNode = currentNode.parent;
+    }
+
+    if (currentNode == null) return false;
+
+    // Get the function body
+    FunctionBody? body;
+    if (currentNode is MethodDeclaration) {
+      body = currentNode.body;
+    } else if (currentNode is FunctionDeclaration) {
+      body = currentNode.functionExpression.body;
+    } else if (currentNode is FunctionExpression) {
+      body = currentNode.body;
+    }
+
+    if (body is! BlockFunctionBody) return false;
+
+    // Check if there's a null-aware assignment before this node
+    return _hasNullAwareAssignment(body.block, node, forcedVar);
+  }
+
+  /// Check if there's a null-aware assignment pattern in the block
+  bool _hasNullAwareAssignment(
+    Block block,
+    PostfixExpression targetNode,
+    String variableName,
+  ) {
+    for (final Statement statement in block.statements) {
+      // Stop checking if we've reached the target node
+      if (_statementContainsNode(statement, targetNode)) {
+        break;
+      }
+
+      // Check for expression statement with null-aware assignment
+      if (statement is ExpressionStatement) {
+        final Expression expression = statement.expression;
+        if (expression is AssignmentExpression &&
+            expression.operator.type == TokenType.QUESTION_QUESTION_EQ) {
+          final String? assignedVar = _getVariableName(expression.leftHandSide);
+          if (assignedVar == variableName) {
+            return true;
+          }
+        }
+      }
     }
     return false;
   }
