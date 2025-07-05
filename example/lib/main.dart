@@ -358,6 +358,12 @@ class StorageManager {
   // Mock storage manager
 }
 
+class _ComprehensiveThemeProvider {
+  _ComprehensiveThemeProvider(this.themeService, this.logger);
+  final _ComprehensiveThemeService themeService;
+  final Object logger;
+}
+
 class _ComprehensiveThemeService {
   _ComprehensiveThemeService(this.storageManager, this.logger);
   final StorageManager storageManager;
@@ -374,8 +380,10 @@ class _SharedPreferencesStorageManager extends StorageManager {
 /// ✅ This pattern should now pass the no_null_force lint rule
 class TestService {
   StorageManager? _storageManager;
-  // ignore: unused_field, use_late_for_private_fields_and_variables
+  // ignore: use_late_for_private_fields_and_variables
   _ComprehensiveThemeService? _themeService;
+  // ignore: unused_field, use_late_for_private_fields_and_variables
+  _ComprehensiveThemeProvider? _themeProvider;
   final Object _logger = Object();
 
   /// Initialize the test service
@@ -385,8 +393,10 @@ class TestService {
     _storageManager ??= await _SharedPreferencesStorageManager.create();
 
     // ✅ Create basic theme service - this should pass the lint rule
-    // ignore: no_null_force
     _themeService = _ComprehensiveThemeService(_storageManager!, _logger);
+
+    // ✅ Create basic theme provider - this should pass the lint rule
+    _themeProvider = _ComprehensiveThemeProvider(_themeService!, _logger);
   }
 
   /// Test multiple assignments

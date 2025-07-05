@@ -1,3 +1,11 @@
+# 1.0.18 - 05.07.2025
+
+- **Enhanced `no_null_force` lint rule**:
+  - Added support for regular assignment patterns (e.g., `x = value; ... x!`)
+  - Enhanced pattern detection for variables that are guaranteed to be non-null after regular assignments
+  - Fixed false positives for sequential assignments in the same function scope
+  - Better handling of complex initialization patterns where variables are assigned and then immediately used
+
 # 1.0.17 - 05.07.2025
 
 - **Enhanced `no_null_force` lint rule**:
